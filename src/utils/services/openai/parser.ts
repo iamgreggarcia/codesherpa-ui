@@ -6,11 +6,12 @@
 import { escapeJsonString } from "@/utils/util";
 import { StreamResponse } from "@/types/streaming";
 
-
 let buffer = "";
 let isFirst = true;
 
 export function parseOpenAIStreamData(data: string): string {
+    console.log(`inside parseOpenAIStreamData`)
+    console.log(`Raw data: ${data}`)
     const dataPrefix = "data: ";
     const events = data.split('\n').filter(event => event.startsWith(dataPrefix));
 
@@ -42,6 +43,9 @@ export function parseOpenAIStreamData(data: string): string {
 }
 
 function processBufferedData(data: string, results: string[]) {
+    console.log(`inside processBufferedData`)
+    console.log(`Buffered data: ${data}`)
+
     try {
         // Parse the JSON data
         const jsonData: StreamResponse = JSON.parse(data);
