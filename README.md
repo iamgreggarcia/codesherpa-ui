@@ -45,4 +45,9 @@ Your changes should align with the MIT license.
 [MIT](LICENSE)
 
 ---
-Disclaimer: portions of the README created with GPT-4. 
+### Disclaimer
+
+`codesherpa-ui` is not affiliated with, endorsed by, or sponsored by OpenAI. It's an independent product, separate from OpenAI’s offerings.
+
+Portions of this README were generated using `codesherpa-ui` and GPT-4.
+
