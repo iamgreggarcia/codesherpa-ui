@@ -1,87 +1,78 @@
-import { escapeJsonString } from "@/utils/util";
-import { StreamResponse } from "@/types/streaming";
+import { OpenAIEndpoints } from '@/constants/openai';
+import { getFetchOptions, FetchOptions } from '@/utils/app/fetch';
+import { AIStream, AIStreamCallbacks, AIStreamParser } from './stream-transformer';
+import { Message } from '@/types/message'; 
 
-let buffer: string = "";
-let isFirst: boolean = true;
+export class OpenAIError extends Error {
+    type: string;
+    param: string;
+    code: string;
 
-/**
- * Parses the OpenAI streaming data and returns the parsed results as a string.
- * @param data The streaming data received from OpenAI's API.
- * @returns The parsed results as a string.
- */
-export function parseOpenAIStreamData(data: string): string {
-    // Split the data into individual events
-    const dataPrefix: string = "data: ";
-    const events: string[] = data.split('\n').filter(event => event.startsWith(dataPrefix));
-
-    let results: string[] = [];
-
-    for (const event of events) {
-        let trimmedEvent: string = event.trim().substring(dataPrefix.length);
-
-        // Check if the event indicates the end of a response
-        if (trimmedEvent === "[DONE]") {
-            if (buffer) {
-                processBufferedData(buffer, results);
-                buffer = "";
-            }
-            continue;
-        }
-
-        buffer += trimmedEvent;
-
-        let match: RegExpExecArray | null;
-        let regex: RegExp = /\{.*?\}(?=\{|$)/g;
-
-        // Process the buffered data using regular expressions
-        while ((match = regex.exec(buffer)) !== null) {
-            processBufferedData(match[0], results);
-            buffer = buffer.substring(match.index + match[0].length);
-        }
+    constructor(message: string, type: string, param: string, code: string) {
+        super(message);
+        this.name = 'OpenAIError';
+        this.type = type;
+        this.param = param;
+        this.code = code;
     }
-
-    // Process any remaining buffered data
-    if (buffer) {
-        processBufferedData(buffer, results);
-        buffer = "";
-    }
-
-    return results.length > 0 ? results.join('') : "";
 }
 
-/**
- * Processes the buffered data received from OpenAI's API and appends the parsed results to the provided array.
- * @param data The data to be processed.
- * @param results The array to which the parsed results will be appended.
- * @returns void
- */
-function processBufferedData(data: string, results: string[]): void {
+export async function OpenAIStream(
+  model: string, 
+  messages: Message[], 
+  key: string, 
+  functions?: any, 
+  function_call?: string, 
+  max_tokens?: number, 
+  temperature?: number, 
+  stream?: boolean, 
+  signal?: AbortSignal,
+  callbacks?: AIStreamCallbacks
+): Promise<ReadableStream<string>> {
+
+    const api_url = OpenAIEndpoints.CHAT_COMPLETIONS;
+    const fetchOptions: FetchOptions = getFetchOptions(model, messages, key, functions, function_call, max_tokens, temperature, stream, signal);
+
+    let response;
     try {
-        const jsonData: StreamResponse = JSON.parse(data);
+        response = await fetch(api_url, fetchOptions);
+    } catch (error) {
+        throw new Error(`Network error: ${(error as Error).message}`);
+    }
 
-        // Check if the response contains a function call name
-        if (jsonData.choices[0]?.delta?.function_call?.name) {
-            isFirst = true;
-            results.push(`{"function_call": {"name": "${jsonData.choices[0]?.delta?.function_call.name}", "arguments": "`);
+    if (response.status !== 200) {
+        let result;
+        try {
+            result = await response.json();
+        } catch (error) {
+            throw new Error(`Response parsing error: ${(error as Error).message}`);
         }
-        // Check if the response contains function call arguments
-        else if (jsonData.choices[0]?.delta?.function_call?.arguments) {
-            const argumentChunk: string = isFirst ? jsonData.choices[0].delta.function_call.arguments.trim() : jsonData.choices[0].delta.function_call.arguments;
-            isFirst = false;
-            results.push(`${escapeJsonString(argumentChunk)}`);
+        if (result.error) {
+            throw new OpenAIError(
+                result.error.message,
+                result.error.type,
+                result.error.param,
+                result.error.code,
+            );
+        } else {
+            const decoder = new TextDecoder();
+            throw new Error(
+                `OpenAI API returned an error: ${decoder.decode(result?.value) || result.statusText
+                }`,
+            );
         }
-        // Check if the response indicates the end of a function call
-        else if (jsonData.choices[0]?.finish_reason === 'function_call') {
-            isFirst = true;
-            results.push('"}}');
-        }
-        // Check if the response contains content
-        else if (jsonData.choices[0]?.delta?.content) {
-            results.push(jsonData.choices[0]?.delta?.content);
-            isFirst = true;
-        }
-    } catch (e) {
-        console.error("Error parsing JSON:", e);
-        console.error("JSON data:", data);
+    }
+
+    if (response.body) {
+        console.log("Response body:", response.body)
+        return AIStream(response, parseOpenAIStreamData, callbacks);
+    } else {
+        throw new Error('OpenAI API response body is null');
     }
 }
+
+export const parseOpenAIStreamData: AIStreamParser = (data: string): string => {
+    const trimmedStr = data.trim();
+    return trimmedStr;
+  };
+  
