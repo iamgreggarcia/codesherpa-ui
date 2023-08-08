@@ -1,6 +1,6 @@
 # codesherpa-ui
 
-A chatbot interface. I extracted the frontend from [codesherpa](https://github.com/iamgreggarcia/codesherpa-fe) and made it better.
+A chatbot interface extracted from [codesherpa](https://github.com/iamgreggarcia/codesherpa-fe) and improved.
 
 ## Installation
 
@@ -31,21 +31,18 @@ You can add the API key in two ways:
 1. **Via Settings**: Open settings within the app and add your API key. This will save the key to `localStorage`.
 2. **Environment Variable (Recommended)**: Add the API key in `.env.local` under `OPENAI_API_KEY`.
 
-## Components Structure
-
-- `Home`: The main container for managing chats, conversations, sidebar, and modals.
-- `Chat`: Handles the chat interaction including sending, receiving, and displaying messages.
-- `Sidebar`: Manages the chat list and options to create or select chats.
-- `Welcome`: Displays an animated welcome message when the API key is not set.
-
 ## Contributing
 
-Feel free to contribute to this project by submitting issues, pull requests, or providing feedback.
+1. Fork and clone the repo.
+2. Create a branch, make changes, and commit.
+3. Push changes to your fork.
+4. Open a pull request.
+
+Your changes should align with the MIT license.
 
 ## License
 
 [MIT](LICENSE)
 
 ---
-
-Please make sure to replace `https://github.com/your-username/codesherpa-ui.git` with the correct repository URL if needed.
+Disclaimer: portions of the README created with GPT-4. 
