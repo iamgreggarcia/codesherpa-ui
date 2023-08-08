@@ -11,14 +11,13 @@ git clone https://github.com/your-username/codesherpa-ui.git
 ```bash
 cd codesherpa-ui
 ```
-
-# Install dependencies
 ```bash
+# Install dependencies
 npm install
 ```
 
-# Start the development server
 ```bash
+# Start the development server
 npm run dev
 ```
 
