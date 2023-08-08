@@ -10,6 +10,7 @@ import { StreamResponse } from "@/types/streaming";
 let isFirst = true;
 
 export function parseOpenAIStreamData(data: string): string {
+    console.log(`Raw data: ${data}`);
     const dataPrefix = "data: ";
     const events = data.split('\n').filter(event => event.startsWith(dataPrefix));
     
