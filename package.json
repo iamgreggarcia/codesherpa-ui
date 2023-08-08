@@ -1,0 +1,52 @@
+{
+  "name": "codesherpa-fe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.15",
+    "@headlessui/tailwindcss": "^0.1.3",
+    "@heroicons/react": "^2.0.18",
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "20.3.1",
+    "@types/react": "18.2.14",
+    "@types/react-dom": "18.2.6",
+    "autoprefixer": "10.4.14",
+    "daisyui": "^3.2.1",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
+    "eventsource-parser": "^1.0.0",
+    "next": "13.4.8-canary.2",
+    "node-fetch": "^3.3.1",
+    "openapi-types": "^12.1.3",
+    "parse-json": "^7.0.0",
+    "postcss": "8.4.24",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-markdown": "^8.0.7",
+    "react-rough-notation": "^1.0.5",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-textarea-autosize": "^8.5.0",
+    "react-toastify": "^9.1.3",
+    "rehype-mathjax": "^4.0.2",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
+    "sqlite": "^4.2.1",
+    "sqlite3": "^5.1.6",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.1.3",
+    "typewriter-effect": "^2.20.1",
+    "uuid": "^9.0.0",
+    "winston": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/parse-json": "^4.0.0",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "@types/uuid": "^9.0.2"
+  }
+}
