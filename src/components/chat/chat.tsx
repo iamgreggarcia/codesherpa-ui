@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ChatContext } from '@/components/chat/chat.context';
 import { ModalContext } from '@/components/ui/modal.context';
+import { PromptInput } from '@/components/prompt';
 
 export interface ChatProps {
   conversation: ChatType;
@@ -247,6 +248,9 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
     }
   };
 
+  const handleToggleSystemPrompt = () => {
+  }
+
   useEffect(() => {
     if (textareaRef.current) {
       if (newMessage === '') {
@@ -289,7 +293,14 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
       ${conversationStarted ? 'pt-0 md:pt-0' : 'pt-8 md:pt-6'}`}>
             <div className={`flex flex-row justify-center z-40 items-center pt-0 mx-0 md:mx-0`}>
               <ModelSelector selectedModel={selectedModel ?? Model.GPT3_5_TURBO_16K_0613} setSelectedModel={setSelectedModel} conversationStarted={conversation.messages.length > 1} />
+
             </div>
+            <div className="flex flex-row justify-center items-center w-auto">
+              {!(conversation.messages.length > 1) && <PromptInput>
+
+              </PromptInput>}
+            </div>
+
             <div className="mx-2 mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto">
               <div className="flex-1 overflow-y-auto mt-12 mb-40 bg-transparent">
                 {

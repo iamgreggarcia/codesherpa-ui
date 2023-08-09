@@ -18,7 +18,7 @@ const Sidebar = ({ onClick, visible, addNewChat, selectConversation, currentConv
     const { state: { apiKeyIsSet, serverSideApiKeySet } } = useContext(ModalContext);
 
     return (
-        <div className={`fixed h-screen bg-gray-700 dark:bg-gray-900 w-64 transition-transform duration-200 ease-in-out transform ${visible ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`fixed h-screen bg-gray-700 dark:bg-gray-900 transition-transform duration-200 ease-in-out transform ${visible ? 'translate-x-0' : '-translate-x-full'}`}>
             <div className=" w-[260px]">
                 <div className="flex h-screen min-h-0 flex-col justify-between">
                     <div className="flex flex-row justify-between items-center mt-2 p-2 gap-2">

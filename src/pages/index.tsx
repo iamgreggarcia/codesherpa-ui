@@ -14,6 +14,7 @@ import { Sidebar, ToggleSidebar } from '@/components/sidebar';
 import { Chat, ChatContext } from '@/components/chat'
 import Modal from '@/components/ui/modal';
 import { ModalContext } from '@/components/ui/modal.context';
+import { PromptContext } from '@/components/prompt';
 import { useMediaQuery } from '@/hooks';
 
 interface HomeProps {
@@ -29,8 +30,7 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
   const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
 
   const { dispatch } = useContext(ModalContext);
-
-
+  const { state: { prompt } } = useContext(PromptContext);
 
   const toggleSidebar = () => {
     setSidebarVisible(!isSidebarVisible);
@@ -48,9 +48,9 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
     const newChat: ChatType = {
       id: uuidv4(),
       title: "New Chat",
-      messages: [{ role: "system", content: DEFAULT_SYSTEM_PROMPT }],
+      messages: [{ role: "system", content: prompt }],
       model: Model.GPT3_5_TURBO_16K_0613,
-      systemPrompt: DEFAULT_SYSTEM_PROMPT
+      systemPrompt: prompt
     };
 
     setIsNewChat(true);
@@ -181,8 +181,7 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
             />
           }
         </div>
-        <Modal>
-        </Modal>
+        <Modal />
       </main>
     </ChatContext.Provider>
   );
