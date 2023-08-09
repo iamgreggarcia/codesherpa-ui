@@ -35,15 +35,23 @@ export function createEventStreamTransformer(
           }
 
           if ('data' in event) {
-            const parsedMessage = customParser(event.data)
-            if (parsedMessage) controller.enqueue(parsedMessage)
+            try {
+              const parsedMessage = customParser(event.data)
+              if (parsedMessage) controller.enqueue(parsedMessage)
+            } catch (error) {
+              controller.error(error)
+            }
           }
         }
       )
     },
 
     transform(chunk) {
-      eventSourceParser.feed(textDecoder.decode(chunk))
+      try {
+        eventSourceParser.feed(textDecoder.decode(chunk))
+      } catch (error) {
+        return Promise.reject(error)
+      }
     }
   });
 }
@@ -63,12 +71,20 @@ export function createCallbacksTransformer(
     async transform(message, controller): Promise<void> {
       controller.enqueue(textEncoder.encode(message))
 
-      if (onToken) await onToken(message)
-      if (onCompletion) aggregatedResponse += message
+      try {
+        if (onToken) await onToken(message)
+        if (onCompletion) aggregatedResponse += message
+      } catch (error) {
+        controller.error(error)
+      }
     },
 
     async flush(): Promise<void> {
-      if (onCompletion) await onCompletion(aggregatedResponse)
+      try {
+        if (onCompletion) await onCompletion(aggregatedResponse)
+      } catch (error) {
+        throw error
+      }
     }
   })
 }

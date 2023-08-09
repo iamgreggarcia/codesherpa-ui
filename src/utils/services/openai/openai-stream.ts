@@ -1,8 +1,8 @@
 import { OpenAIEndpoints } from '@/constants/openai';
 import { getFetchOptions, FetchOptions } from '@/utils/app/fetch';
 import { AIStream, AIStreamCallbacks } from './stream-transformer';
+import { parseOpenAIStreamData } from './parser'
 import { Message } from '@/types/message'; 
-import { parseOpenAIStreamData } from '@/utils/services/openai/parser';
 
 export class OpenAIError extends Error {
     type: string;
@@ -65,7 +65,6 @@ export async function OpenAIStream(
       }
   
       if (response.body) {
-          // Removed the reading of response body here
           return AIStream(response, parseOpenAIStreamData, callbacks);
       } else {
           throw new Error('OpenAI API response body is null');

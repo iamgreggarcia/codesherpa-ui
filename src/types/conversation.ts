@@ -2,7 +2,7 @@
  * Represents the author of a message.
  */
 export type Author = {
-    role: "system" | "user" | "assistant";
+    role: "system" | "user" | "assistant | function";
     name?: string;
     metadata: Record<string, any>;
 }
