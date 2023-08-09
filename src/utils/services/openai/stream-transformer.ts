@@ -1,3 +1,6 @@
+/**
+ * Based on code from https://github.com/vercel-labs/ai/tree/main/packages/core/streams
+ */
 import {
   createParser,
   EventSourceParser,

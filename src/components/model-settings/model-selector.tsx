@@ -40,10 +40,13 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ selectedModel, setSelecte
   }, []);
 
   useEffect(() => {
-    const baseModel = Object.values(OpenAIBaseModel).find(base => selectedModel.startsWith(base));
-    setActiveButton(baseModel || '');
-    setSelectedModelSVG(modelToSVG(selectedModel, true));
+    if (selectedModel) {
+      const baseModel = Object.values(OpenAIBaseModel).find(base => selectedModel.startsWith(base));
+      setActiveButton(baseModel || '');
+      setSelectedModelSVG(modelToSVG(selectedModel, true));
+    }
   }, [selectedModel]);
+  
 
   const handleMouseEnter = (baseModel: OpenAIBaseModel) => {
     clearTimeout(timeoutId);

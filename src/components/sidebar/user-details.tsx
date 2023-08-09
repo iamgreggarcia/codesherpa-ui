@@ -14,9 +14,7 @@ const UserDetails = () => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            !apiKeyIsSet && !serverSideApiKeySet ? setShowRoughNotation(true) : setShowRoughNotation(false);
-        }, 2000);
+        !apiKeyIsSet && !serverSideApiKeySet ? setShowRoughNotation(true) : setShowRoughNotation(false);
     }, [apiKeyIsSet, serverSideApiKeySet]);
 
     return (
@@ -31,7 +29,7 @@ const UserDetails = () => {
                         className={'p-2 rounded-md shadow-xl bg-fuchsia-600'} />
                 </div>
                 <div className='w-full text-left pl-4 text-gray-200 dark:text-white font-semibold'>
-                    <RoughNotation type="box" padding={14} animationDuration={2000} color="rgb(253 224 71)" strokeWidth={2} show={showRoughNotation}>
+                    <RoughNotation animationDelay={4000} type="box" padding={14} animationDuration={2000} color="rgb(253 224 71)" strokeWidth={2} show={showRoughNotation}>
                         <p>Settings</p>
                     </RoughNotation>
                 </div>
