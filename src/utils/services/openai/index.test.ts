@@ -1,10 +1,7 @@
 import { AIStream } from './stream-transformer';
 import { parseOpenAIStreamData } from './parser';
 import { setup } from '@/tests/utils/mock-service';
-if (typeof fetch === 'undefined') {
-    global.fetch = require('node-fetch').default
-  }
-  
+
 describe('AIStream', () => {
     let mockService: ReturnType<typeof setup>;
 
