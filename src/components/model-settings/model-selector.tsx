@@ -78,7 +78,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ selectedModel, setSelecte
 
   if (conversationStarted) {
     return (
-      <div className={`top-0 fixed flex flex-wrap w-full items-center z-40 justify-center gap-1 border-b border-black/10 bg-gray-50 py-1 px-0 text-gray-500 dark:border-gray-900/50 backdrop-blur-sm dark:bg-gray-700/50 dark:text-gray-300 duration-300 transform transition-transform ${scrollDirection === 'down' ? '-translate-y-full' : ''}`}>
+      <div className={`top-0 fixed flex flex-wrap w-full items-center z-30 justify-center gap-1 border-b border-black/10 bg-gray-50 py-1 px-0 text-gray-500 dark:border-gray-900/50 backdrop-blur-sm dark:bg-gray-700/50 dark:text-gray-300 duration-300 transform transition-transform ${scrollDirection === 'down' ? '-translate-y-full' : ''}`}>
         {modelToSVG(selectedModel, true)} Model: {selectedModel}
       </div>
     );
