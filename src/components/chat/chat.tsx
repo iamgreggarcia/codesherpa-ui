@@ -1,8 +1,15 @@
-import { useState, useEffect, useRef, MutableRefObject, useCallback, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  MutableRefObject,
+  useCallback,
+  useContext
+} from 'react';
 import { Model, pathMap, serverUrl } from '@/constants/openai';
 import { operations } from '@/utils/services/plugin-protocol/codesherpa';
 import { ModelSelector } from '@/components/model-settings';
-import { ChatMessage, ChatInput } from '@/components/chat';
+import { ChatMessage, ChatInput, ChatScrollAnchor } from '@/components/chat';
 import Welcome from '@/components/welcome';
 import { OpenAIError } from '@/utils/util';
 import { useMediaQuery } from '@/hooks';
@@ -34,13 +41,17 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [fileIsAttached, setFileIsAttached] = useState<boolean>(false);
+  const [showScrollToBottom, setShowScrollToBottom] = useState<boolean>(false);
   // TODO: remove this state, replace with context
   const [resubmitLastMessage, setResubmitLastMessage] = useState(false);
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
 
-  const { messageIsStreaming, setMessageIsStreaming, isNewChat, setIsNewChat } = useContext(ChatContext);
+  const { messageIsStreaming, setMessageIsStreaming } = useContext(ChatContext);
   const { state: { apiKeyIsSet, serverSideApiKeySet } } = useContext(ModalContext);
+
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
 
   const isMobile = useMediaQuery('xs');
 
@@ -222,6 +233,27 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
     [conversation, newMessage, selectedModel, cancelStreamRef, uploadedFileUrl, uploadedFileName, messageIsStreaming],
   );
 
+  const handleScroll = () => {
+    console.log('scrolling in `chat.tsx`')
+    const offset = 10;
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+      if (scrollTop + clientHeight < scrollHeight - offset) {
+        setShowScrollToBottom(true);
+      } else {
+        setShowScrollToBottom(false);
+      }
+    }
+  }
+
+  const handleScrollToBottom = () => {
+    console.log('scrolling in `chat.tsx`')
+    const element = messageEndRef.current;
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
   const stopConversationHandler = () => {
     setMessageIsStreaming(false);
     setNewMessage('');
@@ -267,29 +299,24 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
     if (messageEndRef.current && conversation) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    if (conversation?.messages.length > 1) {
-      setConversationStarted(true);
-      setIsNewChat(false)
-    }
-  }, [conversation?.messages, textareaRef.current]);
 
-  useEffect(() => {
     const userMessageExists = conversation.messages.some(message => message.role === 'user');
     if (userMessageExists) {
       setConversationStarted(true);
     }
-  }, [conversation]);
+  }, [conversation, messageEndRef.current]);
+
+
 
   return (
-    <div className="relative h-full p-6 mx-0">
+    <div onScroll={handleScroll} ref={chatContainerRef} className="w-full relative p-4 mx-0">
       {(!apiKeyIsSet && !serverSideApiKeySet) ?
         (<div className='flex flex-col items-center justify-center h-full'>
           <Welcome />
         </div>)
         :
         <>
-          <div className={`absolute top-0 left-0 w-full border-transparent dark:border-white/20 
-      ${conversationStarted ? 'pt-0 md:pt-0' : 'pt-8 md:pt-6'}`}>
+          <div className={`max-h-full absolute top-0 left-0 w-full border-transparent dark:border-white/20 ${conversationStarted ? 'pt-0 md:pt-0' : 'pt-8 md:pt-6'}`}>
             <div className={`flex flex-row justify-center z-40 items-center pt-0 mx-0 md:mx-0`}>
               <ModelSelector selectedModel={selectedModel ?? Model.GPT3_5_TURBO_16K_0613} setSelectedModel={setSelectedModel} conversationStarted={conversation.messages.length > 1} />
 
@@ -300,32 +327,35 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
               </PromptInput>}
             </div>
 
-            <div className="mx-2 mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto">
-              <div className="flex-1 overflow-y-auto mt-12 mb-40 bg-transparent">
-                {
-                  conversation.messages.map((message: Message, index: number) => {
-                    const lastMessage = index > 0 ? conversation.messages[index - 1] : 'na';
-                    return (
-                      message.role !== 'system' && (
-                        <ChatMessage
-                          key={index}
-                          message={message}
-                          streamingMessageIndex={conversation.messages.length - 1}
-                          isCurrentMessage={index === conversation.messages.length - 1}
-                          lastMessage={lastMessage as Message}
-                          messageIndex={index}
-                          hoveredMessageIndex={hoveredMessageIndex}
-                          setHoveredMessageIndex={setHoveredMessageIndex}
-                          onEdit={(editedMessage) => {
-                            if (editedMessage.content) {
-                              handleSendMessage(editedMessage, conversation.messages.length - index);
-                            }
-                          }}
-                        />
-                      )
-                    );
-                  })
-                }
+            <div className="w-full overflow-x-hidden mt-4 flex flex-row gap-3 last:mb-2 md:mx-0 md:mt-[52px] md:last:mb-6 lg:mx-auto">
+              <div className="flex-1 mt-12 mb-40 bg-transparent" onScroll={handleScroll} ref={chatContainerRef}>
+                <>
+                  {
+                    conversation.messages.map((message: Message, index: number) => {
+                      const lastMessage = index > 0 ? conversation.messages[index - 1] : 'na';
+                      return (
+                        message.role !== 'system' && (
+                          <ChatMessage
+                            key={index}
+                            message={message}
+                            streamingMessageIndex={conversation.messages.length - 1}
+                            isCurrentMessage={index === conversation.messages.length - 1}
+                            lastMessage={lastMessage as Message}
+                            messageIndex={index}
+                            hoveredMessageIndex={hoveredMessageIndex}
+                            setHoveredMessageIndex={setHoveredMessageIndex}
+                            onEdit={(editedMessage) => {
+                              if (editedMessage.content) {
+                                handleSendMessage(editedMessage, conversation.messages.length - index);
+                              }
+                            }}
+                          />
+                        )
+                      );
+                    })
+                  }
+                  <ChatScrollAnchor trackVisibility={messageIsStreaming} />
+                </>
                 <div ref={messageEndRef} />
               </div>
             </div>
@@ -341,6 +371,8 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
             conversationLength={conversation.messages.length}
             fileIsAttached={fileIsAttached}
             isMobile={isMobile}
+            showScrollToBottom={true}
+            onScrollToBottomClick={handleScrollToBottom}
           />
         </>
       }

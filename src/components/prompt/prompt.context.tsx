@@ -3,8 +3,6 @@ import { useLocalStorage } from '@/hooks';
 import { DEFAULT_SYSTEM_PROMPT } from '@/constants/openai';
 
 interface PromptState {
-    setPrompt: (prompt: string) => void;
-    setLocalPrompt: (prompt: string) => void;
     prompt: string;
     isDefault: boolean;
 }
@@ -14,8 +12,6 @@ type PromptAction =
     | { type: 'SET_LOCAL_PROMPT', payload: string }
 
 const initialState: PromptState = {
-    setPrompt: () => null,
-    setLocalPrompt: () => null,
     prompt: '',
     isDefault: true,
 }
@@ -36,9 +32,9 @@ export const PromptProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 const isDefault = newPrompt === DEFAULT_SYSTEM_PROMPT;
                 return { ...state, prompt: newPrompt, isDefault };
             case 'SET_LOCAL_PROMPT':
-                const isDefaultLocal = action.payload;
+                const isDefaultLocal = action.payload === DEFAULT_SYSTEM_PROMPT;
                 const prompt = isDefaultLocal ? DEFAULT_SYSTEM_PROMPT : localPrompt;
-                return { ...state, prompt, isDefault: prompt };
+                return { ...state, prompt, isDefault: isDefaultLocal };
             default:
                 return state;
         }

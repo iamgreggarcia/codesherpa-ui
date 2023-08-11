@@ -78,7 +78,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ selectedModel, setSelecte
 
   if (conversationStarted) {
     return (
-      <div className={`top-0 fixed flex flex-wrap w-full items-center z-30 justify-center gap-1 border-b border-black/10 bg-gray-50 py-1 px-0 text-gray-500 dark:border-gray-900/50 backdrop-blur-sm dark:bg-gray-700/50 dark:text-gray-300 duration-300 transform transition-transform ${scrollDirection === 'down' ? '-translate-y-full' : ''}`}>
+      <div className={`top-0 fixed flex flex-wrap w-full items-center z-30 justify-center gap-1 border-b border-black/10 bg-gray-50 py-1 px-0 text-gray-500 dark:border-gray-900 backdrop-blur-sm dark:bg-gray-700 dark:text-gray-300 duration-300 transform transition-transform ${scrollDirection === 'down' ? '-translate-y-full' : ''}`}>
         {modelToSVG(selectedModel, true)} Model: {selectedModel}
       </div>
     );
@@ -86,14 +86,14 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ selectedModel, setSelecte
     return (
       <div className="relative flex rounded-xl bg-gray-100 p-1 mt-2 text-gray-900 dark:bg-gray-900" onMouseLeave={handleMouseLeave}>
         <div className="dropdown dropdown-hover">
-          <ul className="flex w-full list-none sm:w-auto" onMouseEnter={() => clearTimeout(timeoutId)}>
+          <ul className="flex w-full list-none" onMouseEnter={() => clearTimeout(timeoutId)}>
             {Object.values(OpenAIBaseModel).map((baseModel, index) => (
-              <li className="group w-full" key={baseModel}>
+              <li className="group" key={baseModel}>
                 <div onMouseEnter={() => handleMouseEnter(baseModel)}>
                   <button
                     onClick={() => handleButtonClick(baseModel)}
                     className={classNames(
-                      'relative flex w-full sm:w-auto h-10 items-center justify-center gap-1 rounded-lg border py-3 outline-none ml-0 transition-all duration-300 sm:min-w-[148px] md:gap-0.5 md:py-2.5',
+                      'relative flex w-full sm:w-full h-10 items-center justify-center gap-1 rounded-lg border py-3 outline-none ml-0 transition-all duration-300 sm:min-w-[148px] md:gap-0.5 md:py-2.5',
                       selectedModel.startsWith(baseModel)
                         ? 'border-black/10 bg-white text-gray-900 shadow-[0_1px_7px_0px_rgba(0,0,0,0.06)] hover:!opacity-100 dark:border-[#4E4F60] dark:bg-gray-700 dark:text-gray-100'
                         : 'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-100',

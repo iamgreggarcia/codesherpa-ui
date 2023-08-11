@@ -153,7 +153,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isCurrentMessage, st
 
   return (
     <div
-      className={`group md:px-4 ${message.role === 'user'
+      className={`group md:px-4 w-full ${message.role === 'user'
         ? 'border-b border-black/15  text-[#1e232a] dark:border-gray-900/50'
         : 'border-0 border-black/15 bg-slate-100 dark:border-gray-900/50 dark:bg-gray-700'
         }`}
@@ -161,7 +161,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isCurrentMessage, st
       onMouseEnter={() => setHoveredMessageIndex(messageIndex)}
       onMouseLeave={() => setHoveredMessageIndex(null)}
     >
-      <div className="relative m-auto flex p-4  md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+      <div className="overflow-x-auto w-full relative m-auto flex p-4  md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <div className="min-w-[40px] text-right font-bold mr-5 sm:mr-4">
           {((message.role === 'user') ||
             (message.role === 'assistant' && lastMessage.role === 'user') ||
@@ -217,13 +217,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isCurrentMessage, st
                   className="btn btn-primary"
                   disabled={message.content === newMessage || newMessage.trim() === '' || isTyping}
                 >Save & Submit</button>
-                <button onClick={handleCancelEditMessage} className="btn btn-outline bg-gray-100 text-black dark:text-white hover:text-black hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">Cancel</button>
+                <button onClick={handleCancelEditMessage} className="btn btn-outline bg-gray-100 text-black dark:text-white hover:text-black hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700">Cancel</button>
               </div>
             </div>
           )}
 
           {!isEditing && content && (
-            checkContent(content) ?
+              checkContent(content) ?
               <CollapsibleSection title="Function call" isStreaming={messageIsStreaming} isCurrentMessage={isCurrentMessage} >
                 <MemoizedReactMarkdown
                   className="dark:text-gray-50 prose break-words bg-gray-950 overflow-x-scroll p-4 dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"

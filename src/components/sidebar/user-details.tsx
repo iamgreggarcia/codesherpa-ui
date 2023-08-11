@@ -21,7 +21,7 @@ const UserDetails = () => {
         <div className="relative">
             <div className='divider px-4'></div>
             <button
-                className="w-60 flex flex-row justify-between items-center gap-2.5 rounded-md p-2 m-2 text-sm transition-colors duration-200 hover:bg-gray-800 group-ui-open:bg-gray-800"
+                className="w-60 flex flex-row justify-between items-center gap-2.5 rounded-md p-2 m-2 text-sm transition-colors duration-200 hover:bg-gray-700 group-ui-open:bg-gray-700"
                 onClick={openSettings}
             >
                 <div className="flex-shrink-0">

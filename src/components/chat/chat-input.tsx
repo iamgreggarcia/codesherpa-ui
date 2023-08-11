@@ -1,7 +1,8 @@
 import { useState, MutableRefObject } from 'react';
 import { Message } from '@/types/message';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
-import {TextAreaInput} from '@/components/ui/text-area-input';
+import { TextAreaInput } from '@/components/ui/text-area-input';
+import { ScrollToBottom } from '@/components/ui/buttons'
 
 interface ChatInputProps {
     newMessage: string;
@@ -14,6 +15,8 @@ interface ChatInputProps {
     conversationLength: number;
     fileIsAttached: boolean;
     isMobile: boolean;
+    showScrollToBottom: boolean;
+    onScrollToBottomClick: () => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -27,10 +30,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
     conversationLength,
     fileIsAttached,
     isMobile,
+    showScrollToBottom,
+    onScrollToBottomClick
 }) => {
 
     const [isTyping, setIsTyping] = useState<boolean>(false);
-
     const handleSend = () => {
         if (messageIsStreaming) {
             return;
@@ -58,10 +62,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
             <div className="fixed bottom-0 border-0 w-full dark:border-orange-200 bg-gradient-to-b from-transparent via-white to-white pt-6 dark:from-transparent dark:via-gray-800 dark:to-gray-800 md:pt-2">
                 <div className="stretch mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto lg:max-w-3xl">
                     <div className="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
-                        <div className="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
+                        <div className="h-full flex flew-row ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-around">
                             {messageIsStreaming ? (
                                 <button
-                                    className="dark:bg-gray-800 bg-white text-black dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-200  hidden md:block btn relative btn-neutral -z-0 border-0 md:border"
+                                    className=" bg-white text-black dark:text-gray-100 dark:bg-gray-500 dark:hover:bg-gray-500 hover:bg-gray-200  hidden md:block btn btn-md relative btn-neutral -z-0 border-0 md:border"
                                     onClick={stopConversationHandler}
                                 >
                                     <div className="flex w-full gap-2 items-center justify-center">
@@ -73,7 +77,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                 </button>
                             ) : conversationLength > 1 ? (
                                 <button
-                                    className="dark:bg-gray-800 bg-white text-black dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-200 hidden md:block btn relative btn-neutral -z-0 border-0 md:border"
+                                    className=" bg-white text-black dark:text-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hidden md:block btn btn-md relative btn-neutral -z-0 border-0 md:border"
                                     onClick={regenerateResponseHandler}
                                 >
                                     <div className="flex w-full gap-2 items-center justify-center">
@@ -83,7 +87,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                         Regenerate Response
                                     </div>
                                 </button>
+
                             ) : null}
+                            <div className="fixed right-20 mb-2 mr-2 hidden md:block">
+                                <ScrollToBottom onClick={onScrollToBottomClick} />
+                            </div>
                         </div>
                         <div className="relative flex mx-1 flex-col h-full flex-1 items-stretch border-black/10 bg-slate-100 shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:bg-gray-700 dark:text-white dark:focus:border-12 dark:shadow-[0_0_20px_rgba(0,0,0,0.10)] sm:mx-4 rounded-xl dark:outline-none outline-none">
                             <div className="flex flex-row md:flex-col pr-10 items-center w-full md:w-auto mr-0">
@@ -111,7 +119,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
                             }
                         </div>
                         {/* Mobile buttons container */}
-                        <div className="md:hidden flex gap-2 mx-2 mt-1">
+                        <div className="md:hidden flex flex-col gap-2 mx-2 mt-1">
+
                             {messageIsStreaming ? (
                                 <button className="btn btn-square btn-outline" onClick={stopConversationHandler}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>

@@ -1,2 +1,3 @@
-export * from './useMediaQuery';
-export * from './useLocalStorage';
+export * from './use-media-query';
+export * from './use-local-storage';
+export * from './use-at-bottom'

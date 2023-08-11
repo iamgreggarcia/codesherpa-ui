@@ -13,7 +13,7 @@ const ChatItem = ({ id, name, isSelected }: ChatItemProps) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const currentNameRef = useRef(name);
-    const chatClass = isSelected ? 'bg-opacity-50 bg-gray-600' : '';
+    const chatClass = isSelected ? 'bg-opacity-50 bg-gray-700' : '';
     const inputRef = useRef<HTMLInputElement>(null);
 
     const { conversations, updateChat, removeConversation, messageIsStreaming } = useContext(ChatContext);
@@ -58,7 +58,7 @@ const ChatItem = ({ id, name, isSelected }: ChatItemProps) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <li className={`flex flex-row justify-between p-1 items-center gap-3 relative rounded-md cursor-pointer break-all  hover:bg-gray-800 transition-all  ${chatClass}`}>
+            <li className={`flex flex-row justify-between p-1 items-center gap-3 relative rounded-md cursor-pointer break-all  hover:bg-gray-700 transition-all  ${chatClass}`}>
                 <div className="text-white pl-2">
                     <ChatIcon />
                 </div>

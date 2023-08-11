@@ -34,7 +34,6 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
 
   const { dispatch: modalDispatch } = useContext(ModalContext);
   const { state: { prompt }, dispatch: promptDispatch } = useContext(PromptContext);
-  console.log('prompt in index.tsx', prompt)
   const [localPrompt] = useLocalStorage('customPrompt', DEFAULT_SYSTEM_PROMPT);
 
   const isMobile = useMediaQuery('xs');
@@ -54,7 +53,6 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
   };
 
   const addNewChat = () => {
-    console.log('prompt in index.tsx addNewChat', prompt)
     const newChat: ChatType = {
       id: uuidv4(),
       title: "New Chat",
@@ -142,7 +140,6 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
   // On mount
   useEffect(() => {
     const savedConversations = getConversations();
-    console.log('savedConversations', savedConversations)
     const savedCurrentConversation = getSelectedConversation();
     setConversations(savedConversations);
     setCurrentConversation(savedCurrentConversation);

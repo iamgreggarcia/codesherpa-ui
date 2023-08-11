@@ -13,9 +13,9 @@ const PromptInput: React.FC<PromptInputProps> = ({ children }) => {
     }
 
     return (
-        <div className="collapse border border-gray-500 z-0 bg-base-200 sm:w-full mx-4 lg:w-2/5 mt-4 collapse-plus">
+        <div className="collapse border-2 border-gray-600 z-0 bg-base-200 sm:w-full mx-4 lg:w-2/5 mt-4 collapse-plus">
             <input type="checkbox" className="peer" />
-            <div className="collapse-title bg-gray-800 text-gray-400  peer-checked:bg-gray-900 peer-checked:text-gray-300">
+            <div className="collapse-title bg-gray-400 dark:bg-gray-800 text-gray-400  peer-checked:bg-gray-900 peer-checked:text-gray-300">
                 <div className="flex flex-row items-center justify-around">
                     <p>System prompt: <code className={`font-semibold ${isDefault ? '' : 'text-green-600'}`}>{isDefault ? 'Default' : 'Custom'}</code></p>
                 </div>

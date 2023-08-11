@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
 
   return (
     <div className="absolute inset-0 z-50" onClick={onClose}>
-      <div className="fixed inset-0 bg-gray-500/90 dark:bg-gray-800/90">
+      <div className="fixed inset-0 bg-gray-500/90 dark:bg-gray-700/90">
         <div className="grid-cols-[10px_1fr_10px] grid h-full w-full grid-rows-[minmax(10px,_1fr)_auto_minmax(10px,_1fr)] md:grid-rows-[minmax(20px,_1fr)_auto_minmax(20px,_1fr)] ">
           <div role="dialog" className="overflow-y-auto relative col-auto col-start-2 row-auto row-start-2 w-full rounded-lg text-left shadow-xl transition-all left-1/2 -translate-x-1/2 bg-gray-200 dark:bg-gray-900 md:max-w-[680px]" tabIndex={-1} onClick={stopPropagation}>
             <div className="px-4 pb-4 pt-5 sm:p-6 flex items-center justify-between border-b border-black/10 dark:border-white/10">
@@ -52,7 +52,7 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
                     aria-controls={`${tab}-content`}
                     onClick={() => setActiveTab(tab)}
                     key={tab}
-                    className={`group flex items-center justify-start gap-2 rounded-md px-2 py-1.5 text-sm ${state.activeTab === tab ? 'bg-gray-800 text-white' : 'text-gray-500'}`}
+                    className={`group flex items-center justify-start gap-2 rounded-md px-2 py-1.5 text-sm ${state.activeTab === tab ? 'bg-gray-700 text-white' : 'text-gray-500'}`}
                     tabIndex={-1}>
                     {tab}
                   </button>
