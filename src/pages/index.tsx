@@ -1,4 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { GetServerSideProps } from 'next';
 import { Chat as ChatType } from '@/types/chat';
@@ -15,7 +19,7 @@ import { Chat, ChatContext } from '@/components/chat'
 import Modal from '@/components/ui/modal';
 import { ModalContext } from '@/components/ui/modal.context';
 import { PromptContext } from '@/components/prompt';
-import { useMediaQuery } from '@/hooks';
+import { useLocalStorage, useMediaQuery } from '@/hooks';
 
 interface HomeProps {
   serverSideApiKeySet: boolean;
@@ -24,14 +28,19 @@ interface HomeProps {
 export default function Home({ serverSideApiKeySet }: HomeProps) {
   const [conversations, setConversations] = useState<ChatType[]>([]);
   const [currentConversation, setCurrentConversation] = useState<ChatType | null>(null);
-  const isMobile = useMediaQuery('xs');
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(true);
   const [isNewChat, setIsNewChat] = useState<boolean>(false);
   const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
 
-  const { dispatch } = useContext(ModalContext);
-  const { state: { prompt } } = useContext(PromptContext);
+  const { dispatch: modalDispatch } = useContext(ModalContext);
+  const { state: { prompt }, dispatch: promptDispatch } = useContext(PromptContext);
+  console.log('prompt in index.tsx', prompt)
+  const [localPrompt] = useLocalStorage('customPrompt', DEFAULT_SYSTEM_PROMPT);
 
+  const isMobile = useMediaQuery('xs');
+  const isSmall = useMediaQuery('sm');
+  const isMedium = useMediaQuery('md')
+  
   const toggleSidebar = () => {
     setSidebarVisible(!isSidebarVisible);
   };
@@ -45,6 +54,7 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
   };
 
   const addNewChat = () => {
+    console.log('prompt in index.tsx addNewChat', prompt)
     const newChat: ChatType = {
       id: uuidv4(),
       title: "New Chat",
@@ -113,18 +123,23 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
 
     if (serverSideApiKeySet) {
       localStorage.removeItem('apiKey');
-      dispatch({ type: 'SERVER_SIDE_API_KEY_SET', payload: serverSideApiKeySet });
+      modalDispatch({ type: 'SERVER_SIDE_API_KEY_SET', payload: serverSideApiKeySet });
     } else if (localStorage.getItem('apiKey')) {
-      dispatch({ type: 'LOCAL_STORAGE_API_KEY_SET', payload: true });
+      modalDispatch({ type: 'LOCAL_STORAGE_API_KEY_SET', payload: true });
+    }
+
+    if (localPrompt) {
+      promptDispatch({ type: 'SET_PROMPT', payload: localPrompt });
     }
 
     if (conversations.length > 1) {
-      dispatch({ type: 'SET_CHATS_CLEARED', payload: false });
+      modalDispatch({ type: 'SET_CHATS_CLEARED', payload: false });
     }
 
-  }, [conversations, dispatch, currentConversation, serverSideApiKeySet]);
+  }, [conversations, currentConversation, serverSideApiKeySet]);
 
 
+  // On mount
   useEffect(() => {
     const savedConversations = getConversations();
     console.log('savedConversations', savedConversations)
@@ -142,8 +157,8 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
 
   useEffect(() => {
     // Update isSidebarVisible based on isMobile after component mounts
-    setSidebarVisible(!isMobile);
-  }, [isMobile]);
+    setSidebarVisible(!isMedium && !isSmall && !isMobile);
+  }, [isMedium, isSmall, isMobile]);
 
   return (
     <ChatContext.Provider value={{
@@ -187,6 +202,7 @@ export default function Home({ serverSideApiKeySet }: HomeProps) {
   );
 }
 
+// Users can set the OPENAI_API_KEY environment variable in .env.local 
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {

@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
 
-const useLocalStorage = (key: string, initialValue: any) => {
-  const [storedValue, setStoredValue] = useState(initialValue);
+const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] => {
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   useEffect(() => {
     try {
@@ -14,7 +13,7 @@ const useLocalStorage = (key: string, initialValue: any) => {
     }
   }, [key, initialValue]);
 
-  const setValue = (value: any) => {
+  const setValue = (value: T | ((val: T) => T)) => {
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
@@ -27,4 +26,4 @@ const useLocalStorage = (key: string, initialValue: any) => {
   return [storedValue, setValue];
 };
 
-export { useLocalStorage }
+export { useLocalStorage };

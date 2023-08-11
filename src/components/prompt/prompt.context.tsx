@@ -4,15 +4,18 @@ import { DEFAULT_SYSTEM_PROMPT } from '@/constants/openai';
 
 interface PromptState {
     setPrompt: (prompt: string) => void;
+    setLocalPrompt: (prompt: string) => void;
     prompt: string;
     isDefault: boolean;
 }
 
 type PromptAction =
     { type: 'SET_PROMPT', payload: string }
+    | { type: 'SET_LOCAL_PROMPT', payload: string }
 
 const initialState: PromptState = {
     setPrompt: () => null,
+    setLocalPrompt: () => null,
     prompt: '',
     isDefault: true,
 }
@@ -30,9 +33,12 @@ export const PromptProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             case 'SET_PROMPT':
                 const newPrompt = action.payload;
                 setLocalPrompt(newPrompt);
-                // Determine if the new prompt is the default one
                 const isDefault = newPrompt === DEFAULT_SYSTEM_PROMPT;
                 return { ...state, prompt: newPrompt, isDefault };
+            case 'SET_LOCAL_PROMPT':
+                const isDefaultLocal = action.payload;
+                const prompt = isDefaultLocal ? DEFAULT_SYSTEM_PROMPT : localPrompt;
+                return { ...state, prompt, isDefault: prompt };
             default:
                 return state;
         }
@@ -43,7 +49,7 @@ export const PromptProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         prompt: localPrompt,
         isDefault: localPrompt === DEFAULT_SYSTEM_PROMPT
     };
-    
+
     const [state, dispatch] = useReducer(reducer, initialStateWithPrompt)
 
     const value = useMemo(() => {

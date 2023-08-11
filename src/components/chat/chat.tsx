@@ -27,12 +27,14 @@ export interface ChatProps {
 export function Chat({ conversation, setConversation, updateChat, selectedModel, setSelectedModel }: ChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [conversationStarted, setConversationStarted] = useState(false);
+  // TODO: remove this state, replace with context
   const [isFunctionCall, setIsFunctionCall] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const cancelStreamRef: MutableRefObject<boolean> = useRef(false);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [fileIsAttached, setFileIsAttached] = useState<boolean>(false);
+  // TODO: remove this state, replace with context
   const [resubmitLastMessage, setResubmitLastMessage] = useState(false);
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
 
@@ -248,9 +250,6 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
     }
   };
 
-  const handleToggleSystemPrompt = () => {
-  }
-
   useEffect(() => {
     if (textareaRef.current) {
       if (newMessage === '') {
@@ -265,7 +264,7 @@ export function Chat({ conversation, setConversation, updateChat, selectedModel,
   }, [newMessage, textareaRef.current]);
 
   useEffect(() => {
-    if (messageEndRef.current && conversation) {  // Fix: Ensure 'conversation' is not null or undefined
+    if (messageEndRef.current && conversation) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
     if (conversation?.messages.length > 1) {
