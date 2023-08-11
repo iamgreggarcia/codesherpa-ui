@@ -1,6 +1,6 @@
 # codesherpa-ui
 
-A chatbot interface extracted from [codesherpa](https://github.com/iamgreggarcia/codesherpa-fe) and improved.
+A chatbot interface extracted from [codesherpa](https://github.com/iamgreggarcia/codesherpa-fe) and improved. An OpenAI API is required.
 
 ## Installation
 
